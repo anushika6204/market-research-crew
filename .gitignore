@@ -1,0 +1,13 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Generated at runtime (samples live in sample_outputs/)
+output/*
+!output/.gitkeep
