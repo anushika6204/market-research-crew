@@ -249,10 +249,9 @@ def markdown_to_flowables(md: str, styles: dict) -> list:
 # Statistics / dataset sections
 # --------------------------------------------------------------------------
 def _fmt(value) -> str:
+    """Format numbers with thousands separators and 2 decimals; NaN becomes an em dash."""
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return "\u2014"
-    if isinstance(value, (int,)) or (hasattr(value, "is_integer") and float(value).is_integer() and abs(value) < 1e6 and False):
-        return f"{value:,}"
     try:
         return f"{float(value):,.2f}"
     except (TypeError, ValueError):
