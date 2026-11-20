@@ -258,13 +258,18 @@ def _fmt(value) -> str:
         return str(value)
 
 
+def _pretty(name) -> str:
+    """'net_income_billion' -> 'Net income billion' so headers wrap at spaces."""
+    return str(name).replace("_", " ").strip().capitalize()
+
+
 def stats_section(summary_df: pd.DataFrame, styles: dict) -> list:
     """Heading + grid table rendering the Pandas summary statistics (metrics as rows, stats as columns)."""
     transposed = summary_df.T
     header = ["Metric"] + [str(c).capitalize() for c in transposed.columns]
     rows = []
     for metric, row in transposed.iterrows():
-        cells = [str(metric)]
+        cells = [_pretty(metric)]
         for stat, val in row.items():
             cells.append(f"{int(val)}" if stat == "count" and pd.notna(val) else _fmt(val))
         rows.append(cells)
@@ -278,7 +283,7 @@ def stats_section(summary_df: pd.DataFrame, styles: dict) -> list:
 def dataset_section(df: pd.DataFrame, styles: dict, max_rows: int = 15) -> list:
     """Optional appendix with the first rows of the underlying dataset."""
     shown = df.head(max_rows)
-    header = [str(c) for c in shown.columns]
+    header = [_pretty(c) for c in shown.columns]
     rows = [[_fmt(v) if isinstance(v, float) else str(v) for v in r] for r in shown.itertuples(index=False)]
     note = f"Showing {len(shown)} of {len(df)} rows." if len(df) > max_rows else f"{len(df)} rows."
     return [
@@ -312,9 +317,9 @@ def build_pdf_report(markdown_text: str, summary_df: pd.DataFrame, output_path: 
         str(output_path), pagesize=A4,
         leftMargin=MARGIN, rightMargin=MARGIN, topMargin=BANNER_H + 12 * mm, bottomMargin=22 * mm,
         title=metadata.title, author=metadata.author, subject=metadata.query or "Market research report",
-        canvasmaker=partial(NumberedCanvas, metadata=metadata),
     )
-    doc.build(story)
+    # canvasmaker belongs to build(), not the constructor
+    doc.build(story, canvasmaker=partial(NumberedCanvas, metadata=metadata))
     return output_path
 
 
