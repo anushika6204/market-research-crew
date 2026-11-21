@@ -1,6 +1,6 @@
 # Multi-Agent Market Research & Report Generator (CrewAI)
 
-- **Repository**: [Insert URL]
+- **Repository**: https://github.com/anushika6204/market-research-crew
 
 A hierarchical CrewAI team researches a market topic, analyses the collected metrics with Pandas, writes a report,
 and a ReportLab post-processor compiles a styled A4 PDF. Each run is benchmarked to `benchmarks.json`.
